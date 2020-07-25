@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.missionsky.bbs.dao.mapper.CategorySecondMapper">
+    <resultMap type="com.missionsky.bbs.dao.entity.Categorysecond" id="resultCSMap">
+        <id column="csid" property="csid"/>
+        <result column="fkCid" property="fk_cid"/>
+        <result column="csname" property="csname"/>
+        <result column="postNum" property="post_num"/>
+    </resultMap>
+
+
+    <!-- 查询板块以及该板块下的帖子数 -->
+    <select id="getCategorySecond" resultMap="resultCSMap" parameterType="java.lang.Integer">
+    SELECT cc.*,(SELECT COUNT(1) FROM post p WHERE p.csid = cc.csid ) post_num from (select cs.csid,cs.csname,cs.fk_cid from categorysecond cs inner JOIN category c on cs.fk_cid = c.cid and cs.fk_cid = #{csid} )cc;
+     </select>
+
+
+
+
+</mapper>

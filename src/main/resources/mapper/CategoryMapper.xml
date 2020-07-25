@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.missionsky.bbs.dao.mapper.CategoryMapper">
+    <resultMap type="com.missionsky.bbs.dao.entity.Category" id="resultCategoryMap">
+        <id column="cid" property="cid"/>
+        <result column="cname" property="cname"/>
+
+        <collection property="categoryseconds" ofType="com.missionsky.bbs.dao.entity.Categorysecond" column="csid">
+            <id column="csid" property="csid"/>
+            <result column="fk_cid" property="fkCid"/>
+            <result column="csname" property="csname"/>
+            <result column="csImgPath" property="csImgPath"/>
+            <result column="postNum" property="postNum"/>
+            <result column="todayPostNum" property="todayPostNum"/>
+            <result column="postMsgNum" property="postMsgNum"/>
+            <result column="lastPost" property="lastPost"/>
+        </collection>
+    </resultMap>
+
+
+    <!-- 查询板块以及该板块下的帖子数 -->
+    <select id="getCategory" resultMap="resultCategoryMap">
+        select *,(select count(1) from post where csid=cs.csid) postNum,
+  			(select count(1) from post where csid=cs.csid and DATEDIFF(publish_time,now())=0) todayPostNum,
+  			(select (count(cmt_id))+(select count(1) from post p where csid=cs.csid) from comments m LEFT JOIN post p
+  			on m.post_id=p.post_id where p.csid=cs.csid) postMsgNum
+  			,(select max(publish_time) from post where csid=cs.csid ORDER BY csid) lastPost
+  			from category c left join categorysecond cs on c.cid = cs.fk_cid;
+        </select>
+
+
+</mapper>

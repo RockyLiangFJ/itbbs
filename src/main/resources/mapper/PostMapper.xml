@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.missionsky.bbs.dao.mapper.PostMapper">
+
+    <!-- 帖子详细信息 -->
+    <resultMap type="com.missionsky.bbs.dao.entity.Post" id="resultPostMap">
+        <id column="postId" property="postId"/>
+        <result column="userId" property="userId"/>
+        <result column="userName" property="userName"/>
+        <result column="themeNum" property="themeNum"/>
+        <result column="publishTime" property="publishTime"/>
+        <result column="title" property="title"/>
+        <result column="numReply" property="numReply"/>
+        <result column="mark" property="mark"/>
+        <result column="numRead" property="numRead"/>
+        <result column="state" property="state"/>
+        <result column="csid" property="csid"/>
+        <result column="essences" property="essences"/>
+        <result column="fk_cid" property="fk_cid"/>
+        <result column="csname" property="csname"/>
+        <result column="replyUserId" property="replyUserId"/>
+        <result column="lastReply" property="lastReply"/>
+    </resultMap>
+
+
+
+
+
+
+    <!-- 通过二级板块获取帖子 -->
+    <select id="getPostByCsid" resultMap="resultPostMap" parameterType="int">
+   	select c.csid,c.fk_cid,csname,p.post_id,p.user_id,p.title,p.publish_time,p.num_reply,p.num_read,p.essences,m.cmt_id,m.reply_user_id,u.mark,u.user_name,u.theme_num,u2.replyUserName,
+			m.lastReply from
+			(select * from post where csid = #{csid}) p left JOIN categorysecond c on p.csid=c.csid  left JOIN (select cmt_id,reply_user_id,post_id,max(reply_time) as lastReply
+			from comments group by post_id) m on p.post_id=m.post_id LEFT JOIN(select user_id,user_name,theme_num,mark from user) u on p.user_id=u.user_id LEFT JOIN(select user_id,user_name replyUserName from user) u2 on m.reply_user_id=u2.user_id
+
+        </select>
+
+
+
+
+
+
+
+
+</mapper>

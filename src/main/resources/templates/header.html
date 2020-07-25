@@ -1,0 +1,96 @@
+<nav class="navbar navbar-inverse navbar-static-top">
+    <!-- container容器，左右留有余地 -->
+    <div class="container">
+
+        <div class="navbar-header">
+            <!--
+                在浏览器的宽度很小时，buttion出现。
+                图案为方框内有三道杠。
+                data-target="#TaoistsNavBar" 与 div id="TaoistsNavBar" 相对应
+                -->
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#TaoistsNavBar" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <!--
+                    icon-bar有一个，那个图标就有一道杠。
+                    这里有三个，那么图标就有三道杠
+                  -->
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <div class="collapse navbar-collapse" id="TaoistsNavBar">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/bbs/index">首页</a></li>
+                <li><a href="#">稻秆</a></li>
+                <li><a href="#">豆油</a></li>
+                <li><a href="#">米酒</a></li>
+                <li><a href="#">烧酒</a></li>
+
+                <!-- 一个下拉列表 -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">木部<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">松叶</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">松花</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">杉</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">牡桂</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <!-- navbar-right:通过 CSS 设置特定方向的浮动样式。[节选自bootstrap官网]-->
+            <form class="navbar-form navbar-right">
+                <div class="input-group">
+                <div class="input-group" style="margin-left: 50px">
+                    <span>
+						<a class="register btn btn-normal btn-success" href="/bbs/register">注&nbsp;册</a>
+						<a class="login btn btn-normal btn-primary" href="/bbs/login">登&nbsp;录</a>
+					</span>
+                </div>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+</nav>
+</div>
+<div class="container">
+<div class="panel panel-default">
+    <div class="panel-body">
+        <!-- navbar-right:通过 CSS 设置特定方向的浮动样式。[节选自bootstrap官网]-->
+        <form class="navbar-form navbar-left">
+            <div class="input-group">
+                <input type="search" name="information" class="form-control" placeholder="输入搜索的内容" />
+                <span class="input-group-btn">
+                            <button class="btn btn-default">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+            </div>
+            <div class="input-group" >
+                <span>&nbsp;</span>
+                <ul class="list-inline">
+                    <li><span>热搜:</span></li>
+                    <li><span class="label label-default">默认标签</span></li>
+                    <li><span class="label label-default">默认标签</span></li>
+                    <li><span class="label label-default">默认标签</span></li>
+                    <li><span class="label label-default">默认标签</span></li>
+                    <li><span class="label label-default">默认标签</span></li>
+                    <li><span class="label label-default">默认标签</span></li>
+                    <li><span class="label label-default">默认标签</span></li>
+                    <li><span class="label label-default">默认标签</span></li>
+                    <li><span class="label label-default">默认标签</span></li>
+                </ul>
+            </div>
+        </form>
+
+    </div>
+</div>
+</div>

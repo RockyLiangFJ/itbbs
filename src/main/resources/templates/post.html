@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>论坛</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrapValidator.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/toastr.min.css}" rel="stylesheet" />
+
+    <link rel="shortcut icon" href="#" />
+<style>
+    .pipe{
+        margin: 0 5px;
+        color: #CCC;
+    }
+    .cate_h {
+        padding: 0 10px;
+        height: 31px;
+        border-top: 1px solid #FFF;
+        border-bottom: 1px solid #C2D5E3;
+        border-left: 1px solid #CCC;
+        border-right: 1px solid #CCC;
+        background: #F2F2F2;
+        line-height: 31px;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .listyle{
+        width:auto;
+        vertical-align: top;
+        border-bottom: 1px dashed #CCC;
+    }
+
+    ul,ol{
+        padding-inline-start: 0;
+    }
+    .tbl{
+        background: #eaeef6;
+        width: 20%;
+        line-height: 1.1;
+        text-align: center;
+    }
+    .tbr{
+        background: #fff;
+    }
+    .tbl .pi{
+        text-align: center;
+        line-height: 1.1;
+    }
+    .auth{
+        border-bottom: none;
+    }
+    .user_post{
+        border-top: 1px dashed #CCC;
+    }
+
+</style>
+</head>
+<body id="home">
+<iframe  th:replace="header.html" width="100%" rameborder="0" scrolling="auto"></iframe>
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+
+        </div>
+    </div>
+
+<!--    <div class="panel panel-default">-->
+<!--        <div class="panel-body">-->
+            <table class="table tbtitle">
+                <tbody>
+                <tr>
+                    <td class="tbl">
+                        <ul class="list-inline">
+                            <li class=""><span class="glyphicon glyphicon-eye-open"></span> <span>11111111</span></li>
+                            <li class="">  <span class="glyphicon glyphicon-comment"></span> <span>11111111</span></li>
+                        </ul>
+                    </td>
+
+                    <td class="tbr">
+                        <h4 class="ts">
+                            <a href="forum.php?mod=forumdisplay&amp;fid=8&amp;filter=typeid&amp;typeid=137">[申卡]</a>
+                            <span id="thread_subject">申请的招行信用卡。然后刚有人打电话给我。</span>
+                            <span class="xg1">
+                        <a href="thread-4147781-1-1.html" onclick="return copyThreadUrl(this, '我爱卡论坛')">[复制链接]</a>
+                        </span>
+                        </h4>
+                    </td>
+
+                </tr>
+                <tr><td></td><td></td></tr>
+                <tr class="auth">
+                    <td class="tbl">
+                        <div class="pi">
+                        <div class="authi"><a href="space-uid-4189908.html" target="_blank">战妆</a>
+                        </div>
+                    </div></td>
+                    <td class="tbr">
+                        <ul class="list-inline">
+                            <li>111111111</li>
+                            <li>2017-10-10 12:1</li>
+                            <li>只看该作者</li>
+                            <li style="float:right;clear:both">6楼</li>
+                        </ul>
+                    </td></tr>
+
+                <tr class="user_post">
+                    <td class="tbl">
+                       <ol class="list-unstyled user-details">
+                           <li>
+                               <img class="img-circle" th:src="@{/logo/faceDefault.jpg}">
+                           </li>
+                           <li><em><a href="home.php?mod=spacecp&amp;ac=usergroup&amp;gid=13" target="_blank">金卡</a></em></li>
+                           <li><span id="g_up43066008" onmouseover="showMenu({'ctrlid':this.id, 'pos':'12!'});"><img src="//p.51credit.com/bbs/static/image/common/star_level2.gif" alt="Rank: 5"></span></li>
+                           <li><span class="pbg2" id="upgradeprogress_43066008" onmouseover="showMenu({'ctrlid':this.id, 'pos':'12!', 'menuid':'g_up43066008_menu'});"><span class="pbr2" style="width:72%;"></span></span></li>
+                           <li>
+                               <ol class="list-inline">
+                                   <li>经&nbsp;验</li>
+                                   <li>13</li>
+                               </ol>
+                           </li>
+                           <li>
+                               <ol class="list-inline">
+                                   <li>主&nbsp;题</li>
+                                   <li>173</li>
+                               </ol>
+                           </li>
+                           <li>
+                               <ol class="list-inline">
+                                   <li>帖&nbsp;子</li>
+                                   <li>1</li>
+                               </ol>
+                           </li>
+                           <li>
+                               <ol class="list-inline">
+                                   <li>金&nbsp;币</li>
+                                   <li>1731</li>
+                               </ol>
+                           </li>
+                           <li>
+                               <ol class="list-inline">
+                                   <li><a class="register btn btn-normal btn-success" href="/bbs/register">私&nbsp;信</a></li>
+                                   <li><a class="register btn btn-normal btn-success" href="/bbs/register">关&nbsp;注</a></li>
+                               </ol>
+                           </li>
+                       </ol>
+                    </td>
+                    <td class="tbr">1</td></tr>
+                <tr><td></td><td></td></tr>
+                <tr>
+                    <td class="tbl">1</td>
+                    <td class="tbr">
+                        <form role="form">
+                            <div class="form-group">
+                                <div id="editor">d</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">发表回复</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+
+        </div>
+<!--    </div>-->
+<!--</div>-->
+<iframe  th:replace="footer.html" width="100%" rameborder="0" scrolling="auto"></iframe>
+<script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrapValidator.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/toastr.min.js}"></script>
+
+<script>
+
+</script>
+</body>
+</html>

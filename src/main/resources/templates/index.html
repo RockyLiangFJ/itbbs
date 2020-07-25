@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>论坛</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrapValidator.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/toastr.min.css}" rel="stylesheet" />
+    <link rel="shortcut icon" href="#" />
+<style>
+    .pipe{
+        margin: 0 5px;
+        color: #CCC;
+    }
+    .cate_h {
+        padding: 0 10px;
+        height: 31px;
+        border-top: 1px solid #FFF;
+        border-bottom: 1px solid #C2D5E3;
+        border-left: 1px solid #CCC;
+        border-right: 1px solid #CCC;
+        background: #F2F2F2;
+        line-height: 31px;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .listyle{
+        width:auto;
+        vertical-align: top;
+        border-bottom: 1px dashed #CCC;
+    }
+</style>
+</head>
+<body id="home">
+<iframe  th:replace="header.html" width="100%" rameborder="0" scrolling="auto"></iframe>
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+
+
+    <div id="chart">
+        <p>
+            <img alt="首页" th:src="@{/imgs/chart.png}">
+            今日: <em>0</em><span class="pipe">|</span>昨日: <em>0</em><span class="pipe">|</span>帖子: <em>45</em><span class="pipe">|</span>会员:
+            <em>17</em><span class="pipe">|</span>欢迎新会员: <em><a href="#" target="_blank" class="xi2">admin2</a></em>
+        </p>
+    </div>
+                </div>
+            </div>
+
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+    <ol class="list-unstyled">
+        <li th:each="cs:${categoryList}">
+            <p data-toggle="collapse" th:data-target="'#demo'+${cs.cid}" class="cate_h" >
+                <a th:href="'forum/'+${cs.cid}" th:text="${cs.cname}"></a>
+            </p>
+            <div th:id="'demo' + ${cs.cid}" class="collapse in">
+                <ul class="list-unstyled list-inline">
+                    <li th:each="cs2:${cs.categoryseconds}" class="listyle">
+                        <div class="fl_icn_g" style="width: 50px;">
+                            <a href=""> <img class="img-rounded" th:src="@{${cs2.csImgPath}}" align="left" alt=""></a>
+                        </div>
+                        <dl style="margin-left: 50px;">
+                            <dt>
+                                <a href="form?categorysecond=1" th:text="${cs2.csname}"></a>
+                                <span th:if="${cs2.todayPostNum}>0">
+                                    <span class="badge" th:text="${cs2.todayPostNum}"></span>
+                                </span>
+                            </dt>
+                            <dd>
+                                <em>主题: <span th:title="${cs2.postMsgNum}" th:text="${cs2.postMsgNum}"></span></em>, <em>帖数: <span title="16981" th:text="${cs2.postNum}"></span></em>
+                            </dd>
+                            <dd>
+                                <a href="#">最后发表:
+                                    <span th:title="${cs2.lastPost}" th:text="${#dates.format(cs2.lastPost, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                                </a>
+                            </dd>
+                        </dl>
+                    </li>
+                </ul>
+
+            </div>
+        </li>
+    </ol>
+
+        </div></div>
+</div>
+<iframe  th:replace="footer.html" width="100%" rameborder="0" scrolling="auto"></iframe>
+<script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrapValidator.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/toastr.min.js}"></script>
+<script>
+
+
+
+
+
+</script>
+</body>
+</html>

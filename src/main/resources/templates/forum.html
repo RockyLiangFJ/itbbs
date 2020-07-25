@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>23种Bootstrap导航菜单布局设计jQuery插件</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrapValidator.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/toastr.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/bootstrap-editable.css}" rel="stylesheet" />
+    <link th:href="@{/css/bootstrap-table.min.css}" rel="stylesheet" />
+    <link rel="shortcut icon" href="#" />
+<style>
+    .pipe{
+        margin: 0 5px;
+        color: #CCC;
+    }
+    .cate_h {
+        padding: 0 10px;
+        height: 31px;
+        border-top: 1px solid #FFF;
+        border-bottom: 1px solid #C2D5E3;
+        border-left: 1px solid #CCC;
+        border-right: 1px solid #CCC;
+        background: #F2F2F2;
+        line-height: 31px;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .lis a{
+        position: relative;
+        display: block;
+        padding: 10px 15px;
+        border:1px solid #CCCCCC;
+    }
+</style>
+</head>
+<body id="home">
+<iframe  th:replace="header.html" width="100%" rameborder="0" scrolling="auto"></iframe>
+
+<div class="container">
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <ul class="nav nav-pills" role="tablist" id="cslist">
+                <li role="presentation"><a href="#">全部</a></li>
+                <li role="presentation" th:each="csl:${categorysecondList}" class="lis" th:id="${csl.csid}">
+                    <a th:href="${csl.csid}" >
+                        <span th:text="${csl.csname}"></span>
+                        <span class="badge" th:text="${csl.postNum}"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <table id="table"></table>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form role="form">
+                <div class="form-group">
+                    <div class="form-inline">
+                        <label for="theme" >选择主题</label>
+                        <select id="theme" class="form-control" name="theme">
+                            <option th:each="t:${categorysecondList}" th:value="${t.csid}">
+                                <span  th:text="${t.csname}"></span>
+                            </option>
+                        </select>
+
+                        <label for="inputfile">标题</label>
+                        <input type="text" id="inputfile" class="form-control">
+                        <input type="hidden" name="selectedCsid" id="selectedCsid" th:value="${selectedCsid}">
+                    </div>
+                    <div>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="editor">
+
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">提交</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+<iframe  th:replace="footer.html" width="100%" rameborder="0" scrolling="auto"></iframe>
+<script type="text/javascript" th:src="@{/js/jquery-3.5.1-min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrapValidator.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap-editable.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap-table.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap-table-zh-CN.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap-table-editable.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/toastr.min.js}"></script>
+<script>
+    let $table;
+    let selectedCsid = $('#selectedCsid').val();
+    if(selectedCsid !=null){
+        InitMainTable (selectedCsid);
+    }
+
+    $("#cslist li").each(function(index){
+        $(this).click(function(){
+            $(this).addClass("active");
+            InitMainTable (selectedCsid);
+        })
+    })
+    toastr.options.positionClass = 'toast-center-center';
+
+    //初始化bootstrap-table的内容
+    function InitMainTable (csid) {
+        //记录页面bootstrap-table全局变量$table，方便应用
+        let queryUrl = '/bbs/getPosts?csid=' + csid
+        $table = $('#table').bootstrapTable({
+            url: queryUrl,                      //请求后台的URL（*）
+            method: 'GET',                      //请求方式（*）
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            sortable: false,                     //是否启用排序
+            sortOrder: "asc",                   //排序方式
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+            pageSize: 15,                     //每页的记录行数（*）
+             pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+            search: false,                      //是否显示表格搜索
+            strictSearch: false,
+            showColumns: false,                  //是否显示所有的列（选择显示的列）
+            showRefresh: false,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+            clickToSelect: true,                //是否启用点击选中行
+            uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+            showToggle: false,                   //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            detailView: false,                  //是否显示父子表
+            //得到查询的参数
+            queryParams : function (params) {
+                //这里的键的名字和控制器的变量名必须一致，这边改动，控制器也需要改成一样的
+                let temp = {
+                    rows: params.limit,                         //页面大小
+                    page: (params.offset / params.limit) + 1,   //页码
+                    sort: params.sort,      //排序列名
+                    sortOrder: params.order //排位命令（desc，asc）
+                };
+                return temp;
+            },
+
+            columns: [ {
+                field: 'title',
+                title: '标题'
+            }, {
+                field: 'userId',
+                title: '作者',
+            }, {
+                field: 'numReply',
+                title: '回复',
+            }, {
+                field: 'numRead',
+                title: '浏览'
+            }, {
+                field: 'publishTime',
+                title: '时间'
+            } ],
+            onLoadSuccess: function () {
+            },
+            onLoadError: function () {
+                toastr.error("数据加载失败！");
+            },
+            onDblClickRow: function (row, $element) {
+                let id = row.ID;
+                EditViewById(id, 'view');
+            },
+            rowStyle: function (row, index) { //设置行的特殊样式
+                //这里有5个取值颜色['active', 'success', 'info', 'warning', 'danger'];
+                let strclass = "";
+                if (index == 0) {
+                    strclass = "warning";
+                }
+                return { classes: strclass }
+            }
+        });
+    };
+
+    let rows = $table.bootstrapTable('getSelections');
+    if (rows.length > 0) {
+        ID = rows[0].ID;
+    }
+
+
+    //连接字段格式化
+    function linkFormatter(value, row, index) {
+        return "<a href='" + value + "' title='单击打开连接' target='_blank'>" + value + "</a>";
+    }
+    //Email字段格式化
+    function emailFormatter(value, row, index) {
+        return "<a href='mailto:" + value + "' title='单击打开连接'>" + value + "</a>";
+    }
+    //性别字段格式化
+    function sexFormatter(value) {
+        if (value == "女") { color = 'Red'; }
+        else if (value == "男") { color = 'Green'; }
+        else { color = 'Yellow'; }
+
+        return '<div  style="color: ' + color + '">' + value + '</div>';
+    }
+    //实现删除数据的方法
+    function Delete() {
+        let ids = "";//得到用户选择的数据的ID
+        let rows = $table.bootstrapTable('getSelections');
+        for (var i = 0; i < rows.length; i++) {
+            ids += rows[i].ID + ',';
+        }
+        ids = ids.substring(0, ids.length - 1);
+        DeleteByIds(ids);
+    }
+    function addStudent(){
+        $("#studentModalLabel").text("新舔学生");
+        $('#addStudent').modal();
+    }
+    //编辑
+    function EditViewById(){
+        $("#myModalLabel").text("编辑");
+        $('#myModal').modal();
+    }
+    //实现删除数据的方法
+    function DeleteByIds() {
+        toastr.warning('只能选择一行进行编辑');
+
+    }
+
+
+</script>
+</body>
+</html>

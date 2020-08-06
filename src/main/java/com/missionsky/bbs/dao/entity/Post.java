@@ -36,4 +36,6 @@ public class Post {
     private String csname;
     private String replyUserName;
     private Date lastReply;
+
+    private User user;
 }

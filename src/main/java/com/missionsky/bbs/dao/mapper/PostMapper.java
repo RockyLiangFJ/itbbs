@@ -26,4 +26,8 @@ public interface PostMapper extends BaseMapper<Post> {
      * @return 分页对象
      **/
     IPage<Post> getPostByCsid(Page<Post> page, @Param("csid")Integer csid);
+
+    IPage<Post> getPostByCid(Page<Post> page, @Param("cid")Integer csid);
+
+    Post getPostAndUserById(Integer postId);
 }

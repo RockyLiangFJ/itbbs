@@ -14,7 +14,7 @@
 
     <!-- 查询板块以及该板块下的帖子数 -->
     <select id="getCategorySecond" resultMap="resultCSMap" parameterType="java.lang.Integer">
-    SELECT cc.*,(SELECT COUNT(1) FROM post p WHERE p.csid = cc.csid ) post_num from (select cs.csid,cs.csname,cs.fk_cid from categorysecond cs inner JOIN category c on cs.fk_cid = c.cid and cs.fk_cid = #{csid} )cc;
+    SELECT cc.*,(SELECT COUNT(1) FROM post p WHERE p.csid = cc.csid ) post_num from (select cs.csid,cs.csname,cs.fk_cid from categorysecond cs inner JOIN category c on cs.fk_cid = c.cid and cs.fk_cid = #{cid} )cc;
      </select>
 
 

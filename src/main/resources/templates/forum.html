@@ -8,9 +8,10 @@
     <title>23种Bootstrap导航菜单布局设计jQuery插件</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/bootstrapValidator.min.css}" rel="stylesheet" />
-    <link th:href="@{/css/toastr.min.css}" rel="stylesheet" />
-    <link th:href="@{/css/bootstrap-editable.css}" rel="stylesheet" />
+    <link th:href="@{/css/toastr.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/bootstrap-editable.css}" rel="stylesheet"/>
     <link th:href="@{/css/bootstrap-table.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/summernote.min.css}" rel="stylesheet" />
     <link rel="shortcut icon" href="#" />
 <style>
     .pipe{
@@ -29,7 +30,7 @@
         white-space: nowrap;
         overflow: hidden;
     }
-    .lis a{
+    .lis a,.allC a{
         position: relative;
         display: block;
         padding: 10px 15px;
@@ -45,9 +46,9 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <ul class="nav nav-pills" role="tablist" id="cslist">
-                <li role="presentation"><a href="#">全部</a></li>
+                <li role="presentation" class="allC"><a>全部</a></li>
                 <li role="presentation" th:each="csl:${categorysecondList}" class="lis" th:id="${csl.csid}">
-                    <a th:href="${csl.csid}" >
+                    <a>
                         <span th:text="${csl.csname}"></span>
                         <span class="badge" th:text="${csl.postNum}"></span>
                     </a>
@@ -59,8 +60,13 @@
     <table id="table"></table>
 
     <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                发表帖子
+            </h3>
+        </div>
         <div class="panel-body">
-            <form role="form">
+            <form role="form" id="newPost">
                 <div class="form-group">
                     <div class="form-inline">
                         <label for="theme" >选择主题</label>
@@ -70,8 +76,9 @@
                             </option>
                         </select>
 
-                        <label for="inputfile">标题</label>
-                        <input type="text" id="inputfile" class="form-control">
+                        <label for="inputTitle">标题</label>
+                        <input type="text" id="inputTitle" name="inputTitle" class="form-control">
+                        <input type="hidden" name="selectedCid" id="selectedCid" th:value="${selectedCid}">
                         <input type="hidden" name="selectedCsid" id="selectedCsid" th:value="${selectedCsid}">
                     </div>
                     <div>
@@ -79,9 +86,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div id="editor">
-
-                    </div>
+                    <textarea id="summernote" name="editordata"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">提交</button>
             </form>
@@ -95,28 +100,142 @@
 <script type="text/javascript" th:src="@{/js/bootstrapValidator.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/bootstrap-editable.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/bootstrap-table.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/bootstrap-table-zh-CN.min.js}"></script>
+<script type="text/javascript" th:src="@{/lang/bootstrap-table-zh-CN.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/bootstrap-table-editable.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/toastr.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/summernote.min.js}"></script>
+<script type="text/javascript" th:src="@{/lang/summernote-zh-CN.min.js}"></script>
 <script>
+    $(document).ready(function() {
     let $table;
+    let selectedCid = $('#selectedCid').val();
     let selectedCsid = $('#selectedCsid').val();
-    if(selectedCsid !=null){
-        InitMainTable (selectedCsid);
+    toastr.options.positionClass = 'toast-center-center';
+
+    if(selectedCsid == null || selectedCsid == ''){
+        InitMainTable (selectedCid,0);
+        $('.allC').addClass("active");
+    }else{
+        InitMainTable (0,selectedCsid);
+        $('.allC').addClass("active");
     }
+
+    //初始化summernote富文本编辑器
+    $('#summernote').summernote({
+        height: 300,                 // set editor height
+        lang : 'zh-CN',
+        minHeight: null,             // set minimum height of editor
+        maxHeight: null             // set maximum height of editor
+    });
+
+        //表单校验
+        $('#newPost').bootstrapValidator({
+            message: 'This value is not valid',
+            //提供输入验证图标提示
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                theme: {
+                    message: '请选择主题',
+                    validators: {
+                        notEmpty: {
+                            message: '请选择主题'
+                        }
+
+                    }
+                },
+                inputTitle: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入标题'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 18,
+                            message: '密码长度必须在6到12位之间'
+                        }
+                    }
+                },
+                summernote: {
+                    validators: {
+                        notEmpty: {
+                            message: '验证码不能为空'
+                        },
+                        stringLength: {
+                            min: 4,
+                            max: 4,
+                            message: '验证码长度必须为4位'
+                        },
+                        regexp: {
+                            regexp: /^[a-zA-Z0-9]+$/,
+                            message: '验证码只能包含大写、小写、数字'
+                        }
+                    }
+                }
+            }
+        })
+            .on('success.form.bv', function(e) {//点击提交之后
+                e.preventDefault();
+                let $form = $(e.target);
+                let bv = $form.data('bootstrapValidator');
+                // Use Ajax to submit form data 提交至form标签中的action，result自定义
+                $.post($form.attr('action'), $form.serialize(), function(result) {
+                    //恢复submit按钮disable状态。
+                    $('#loginForm').bootstrapValidator('disableSubmitButtons', false);
+
+                    let errMessage = 'success';
+                    switch(result.msg) {
+                        case 'null':
+                            errMessage = "登录失败，请检查是否正确输入字段!";
+                            break;
+                        case 'codeNull':
+                            errMessage = "验证码已失效，请重新输入!";
+                            break;
+                        case 'login':
+                            errMessage = "登录失败，用户名或密码错误!"
+                            break;
+                        case 'notMatch':
+                            errMessage = "验证码错误，请重新输入!"
+                            break;
+                    }
+                    if(errMessage == 'success'){
+                        window.location.href="studentList";
+                    }else{
+                        //弹出错误提示的登录框
+                        toastr.error(errMessage);
+                        refresh_kaptcha();
+                    }
+
+                });
+            });
 
     $("#cslist li").each(function(index){
         $(this).click(function(){
-            $(this).addClass("active");
-            InitMainTable (selectedCsid);
+            var csid = $(this).attr('id');
+            if(csid ==null || csid ==0){
+                refreshTable (selectedCid,0);
+            }else{
+                refreshTable (0,csid);
+            }
+            $(this).addClass("active")
+            .siblings().removeClass('active')//去除其他项的高亮形式
+            .end();
         })
     })
-    toastr.options.positionClass = 'toast-center-center';
 
+    //刷新table
+    function refreshTable(cid,csid){
+        $table.bootstrapTable('refresh', {
+            url: '/bbs/getPosts?cid=' + cid + '&csid=' + csid
+        });
+    }
     //初始化bootstrap-table的内容
-    function InitMainTable (csid) {
+    function InitMainTable (cid,csid) {
         //记录页面bootstrap-table全局变量$table，方便应用
-        let queryUrl = '/bbs/getPosts?csid=' + csid
+        let queryUrl = '/bbs/getPosts?cid=' + cid + '&csid=' + csid
         $table = $('#table').bootstrapTable({
             url: queryUrl,                      //请求后台的URL（*）
             method: 'GET',                      //请求方式（*）
@@ -164,7 +283,7 @@
                 field: 'numRead',
                 title: '浏览'
             }, {
-                field: 'publishTime',
+                field: 'lastReply',
                 title: '时间'
             } ],
             onLoadSuccess: function () {
@@ -191,7 +310,7 @@
     if (rows.length > 0) {
         ID = rows[0].ID;
     }
-
+    });
 
     //连接字段格式化
     function linkFormatter(value, row, index) {
@@ -231,10 +350,7 @@
     //实现删除数据的方法
     function DeleteByIds() {
         toastr.warning('只能选择一行进行编辑');
-
     }
-
-
 </script>
 </body>
 </html>

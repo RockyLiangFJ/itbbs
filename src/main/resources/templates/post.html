@@ -9,7 +9,7 @@
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/bootstrapValidator.min.css}" rel="stylesheet" />
     <link th:href="@{/css/toastr.min.css}" rel="stylesheet" />
-
+    <link th:href="@{/css/summernote.min.css}" rel="stylesheet" />
     <link rel="shortcut icon" href="#" />
 <style>
     .pipe{
@@ -157,7 +157,7 @@
                     <td class="tbr">
                         <form role="form">
                             <div class="form-group">
-                                <div id="editor">d</div>
+                                <textarea id="summernote" name="editordata"></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary">发表回复</button>
                         </form>
@@ -171,13 +171,20 @@
 <!--    </div>-->
 <!--</div>-->
 <iframe  th:replace="footer.html" width="100%" rameborder="0" scrolling="auto"></iframe>
-<script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery-3.5.1-min.js}"></script>
 <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/bootstrapValidator.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/toastr.min.js}"></script>
-
+<script type="text/javascript" th:src="@{/js/summernote.min.js}"></script>
+<script type="text/javascript" th:src="@{/lang/summernote-zh-CN.min.js}"></script>
 <script>
-
+    //初始化summernote富文本编辑器
+    $('#summernote').summernote({
+        height: 300,                 // set editor height
+        lang : 'zh-CN',
+        minHeight: null,             // set minimum height of editor
+        maxHeight: null             // set maximum height of editor
+    });
 </script>
 </body>
 </html>

@@ -32,11 +32,18 @@ public class ForumServiceImpl implements ForumService {
         return categorySecondMapper.getCategorySecond(csid);
     }
 
+
+
     @Override
-    public IPage<Post> getPostByCsid(Page<Post> page, Integer csid) {
+    public IPage<Post> getPostByCidOrCsid(Page<Post> page,Integer cid,Integer csid) {
+        IPage<Post> p = null;
+        if(cid == null || cid == 0){
+            p =  postMapper.getPostByCsid(page,csid);
+        }else if(csid == null || csid ==0){
+            p = postMapper.getPostByCid(page,cid);
+        }
 
-        return postMapper.getPostByCsid(page,csid);
-
+        return  p;
     }
 
 }

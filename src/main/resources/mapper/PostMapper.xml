@@ -7,7 +7,7 @@
 
     <!-- 帖子详细信息 -->
     <resultMap type="com.missionsky.bbs.dao.entity.Post" id="resultPostMap">
-        <id column="postId" property="postId"/>
+        <id column="post_id" property="postId"/>
         <result column="userId" property="userId"/>
         <result column="userName" property="userName"/>
         <result column="themeNum" property="themeNum"/>
@@ -25,10 +25,53 @@
         <result column="lastReply" property="lastReply"/>
     </resultMap>
 
+    <!-- 楼主和帖子详细信息 -->
+    <resultMap type="com.missionsky.bbs.dao.entity.Post" id="UserPostResultMap">
+        <id column="post_id" property="postId"/>
+        <result column="userId" property="userId"/>
+        <result column="userName" property="userName"/>
+        <result column="publishTime" property="publishTime"/>
+        <result column="updateTime" property="updateTime"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="numReply" property="numReply"/>
+        <result column="numRead" property="numRead"/>
+        <result column="numAgree" property="numAgree"/>
+        <result column="numDisagree" property="numDisagree"/>
+        <result column="csid" property="csid"/>
+        <result column="state" property="state"/>
+        <result column="csname" property="csname"/>
+        <result column="essences" property="essences"/>
 
 
+        <association  property="user" javaType="com.missionsky.bbs.dao.entity.User">
+            <id column="userId" property="userId"/>
+            <result column="userName" property="userName"/>
+            <result column="password" property="password"/>
+            <result column="mark" property="mark"/>
+            <result column="levels" property="levels"/>
+            <result column="postNum" property="postNum"/>
+            <result column="themeNum" property="themeNum"/>
+            <result column="praiseNum" property="praiseNum"/>
+            <result column="coin" property="coin"/>
+            <result column="score" property="score"/>
+            <result column="registerTime" property="registerTime"/>
+            <result column="sex" property="sex"/>
+            <result column="email" property="email"/>
+            <result column="phoneNum" property="phoneNum"/>
+            <result column="address" property="address"/>
+            <result column="imgPath" property="imgPath"/>
+        </association >
+    </resultMap>
 
 
+    <!-- 通过一级板块获取帖子 -->
+    <select id="getPostByCid" resultMap="resultPostMap" parameterType="int">
+      select c.csid,c.fk_cid,csname,p.post_id,p.user_id,p.title,p.publish_time,p.num_reply,p.num_read,p.essences,m.cmt_id,m.reply_user_id,u.user_name,u.theme_num,u.mark,u2.reply_user_name,m.lastReply from
+ 			(select * from categorysecond where fk_cid = #{cid})c inner JOIN post p on p.csid=c.csid left JOIN (select cmt_id,reply_user_id,reply_content,post_id,max(reply_time) as lastReply
+			from comments group by post_id) m on p.post_id=m.post_id LEFT JOIN (select user_id,user_name,theme_num,mark from user)u on p.user_id = u.user_id LEFT JOIN (select user_id,user_name reply_user_name from user)u2 on m.reply_user_id = u2.user_id
+
+    </select>
 
     <!-- 通过二级板块获取帖子 -->
     <select id="getPostByCsid" resultMap="resultPostMap" parameterType="int">
@@ -43,6 +86,11 @@
 
 
 
+    <!-- 获取楼主信息和帖子信息 -->
+    <select id="getPostAndUserById" resultMap="UserPostResultMap" parameterType="int">
+        select u.userId,u.userName,u.levels,u.coin,u.imgPath,u.mark,u.postNum,u.praiseNum,u.themeNum ,u.score,p.csid,p.post_id,p.title,p.content,p.publishTime,p.updateTime,os.numAgree,os.numDisagree,p.numReply,p.numRead,p.state,p.essences,cs.csname from (select * from post where post_id = #{post_id}) p LEFT JOIN user u on u.userId = p.userId LEFT JOIN (select csid,csname from categorysecond)cs on p.csid = cs.csid and u.userId = p.userId LEFT JOIN (select post_id,sum(agree) numAgree,sum(disagree) numDisagree from opinions  where post_id=#{post_id})os on os.post_id = p.post_id
+        <!-- select u.userId,u.userName,u.levels,u.coin,u.imgPath,u.mark,u.postNum,u.praiseNum,u.themeNum ,u.score,p.post_id,p.userId,p.title,p.content,cs.csid,cs.csname,c.cid,c.cname from (select * from post where post_id = 1)p LEFT JOIN categorysecond cs on p.csid=cs.csid LEFT JOIN category c on c.cid = cs.fk_cid LEFT JOIN user u on u.userId = p.userId; -->
+    </select>
 
 
 
